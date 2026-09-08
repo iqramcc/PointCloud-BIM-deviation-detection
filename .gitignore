@@ -1,0 +1,46 @@
+# Generated data & results (regenerable from configs + seeds)
+/data/
+/results/
+!/results/figures/final/
+!/results/**/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+.conda/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# Large point-cloud / mesh artifacts (keep manifests, not clouds)
+*.ply
+*.pcd
+*.las
+*.laz
+*.e57
+!/reports/**/*.ply
+
+# Report build intermediates
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
