@@ -23,6 +23,7 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+markers = ["slow: exercises a full grid slice (tens of registration calls); excluded by default with -m 'not slow'"]
 
 [build-system]
 requires = ["setuptools>=68"]

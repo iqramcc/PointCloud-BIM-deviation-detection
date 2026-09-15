@@ -1,0 +1,99 @@
+# Frozen parameter table — Constitution Art. IV. Tuned ONCE on the held-out
+# calibration condition below (excluded from all reported Phase 2/4 results),
+# then committed verbatim. See specs/plan/phase-2-registration.md §10 for the
+# calibration procedure and scripts/calibrate_registration_params.py.
+calibration_condition:
+  scene_id: S1
+  sample_id: rot1.0_trans25_noise3_moderate/seed0   # already exists in data/S1/ — no new data generated
+  note: >
+    Excluded from every table/plot in Phase 2 and Phase 4. Tuning notes and the
+    parameter values tried are recorded in the commit that froze this file, not here.
+
+seed: 0   # default; overridden per-sample by the caller (run_batch.py) from the sample's own seed
+
+preprocess:
+  # Voxel/normal-radius scaled to the frozen grid's actual point density (100/m^2,
+  # ~0.1m mean spacing — see configs/grid.yaml) rather than a finer nominal value:
+  # a small voxel barely merges anything at this density, and an FPFH radius close
+  # to the point spacing gives too few neighbours for a stable descriptor. Tuned on
+  # the calibration condition below.
+  voxel_size_m: 0.15
+  sor_neighbors: 20
+  sor_std_ratio: 2.0
+  normal_radius_m: 0.30
+  normal_max_nn: 30
+
+mesh_sample:
+  # 800/m^2 (denser than the cloud's own 100/m^2): two independent samplings of the
+  # same continuous surface have a nearest-neighbour gap set by the SPARSER side, so
+  # ICP correspondences need a denser target to shrink that gap below the ICP
+  # schedule's tightest stage. Tuned on the calibration condition below.
+  density_per_m2: 800
+
+fpfh:
+  radius_m: 0.50
+  max_nn: 100
+
+# CALIBRATION FINDING (see specs/plan/phase-2-registration.md §4 and the decision log):
+# no combination tried (radius in {0.15,0.5,0.75,0.8,1.0,1.2}, ransac_n in {3,4}, with
+# or without CorrespondenceCheckerBasedOnDistance/Normal, edge_length_similarity in
+# {0.7-0.9}, max_iteration up to 100000) makes Baseline A reliably converge to the
+# correct global optimum on scene S1: its walls are large, flat, and locally
+# self-similar, so FPFH descriptors carry almost no distinguishing signal away from
+# corners, and mutual-nearest-neighbour feature matching finds only a handful of
+# correspondences (single digits, out of thousands of points) at this project's frozen
+# 100 pts/m^2 density. RANSAC then converges to a plausible-but-wrong symmetric
+# alignment (e.g. a ~180 deg flip) as often as the correct one. This is a genuine
+# baseline-vs-scene limitation, not a code defect — verified by hand-computed rotation
+# cases in tests/test_registration_metrics_math.py and an idealized noise-free/dense
+# resample (0.13mm error) that confirms the *solver* is correct; only the *blind
+# correspondence search* fails on this geometry. Values below are the best-performing
+# combination found; kept because they are honest and literature-standard, not because
+# they pass the identity/recovery gate — see specs/tasks/phase-2-registration.md.
+ransac_a:
+  distance_threshold_m: 0.05
+  edge_length_similarity: 0.8   # CorrespondenceCheckerBasedOnDistance/Normal rejected
+                                 # every candidate within budget on this scene — omitted.
+  ransac_n: 4
+  max_iteration: 60000
+  confidence: 0.999
+  mutual_filter: true
+  min_fitness: 0.05        # below this -> RansacNoConsensusError
+
+model_planes:
+  coplanarity_angle_deg: 1.0
+  coplanarity_dist_m: 0.001
+
+plane_seg:
+  distance_threshold_m: 0.02
+  ransac_n: 3
+  num_iterations: 1000
+  min_support_points: 200
+  max_planes: 10
+
+plane_match:
+  max_normal_angle_deg: 20.0
+  max_centroid_dist_m: 0.60     # generous vs. grid's max 100mm/4deg offset; see plan §5
+  centroid_weight: 20.0          # cost units: deg per metre, roughly balances the two terms
+  area_weight: 5.0
+  cloud_point_density_per_m2: 100  # matches configs/grid.yaml's frozen density
+  min_correspondences: 3
+  min_normal_rank_singular_value: 0.2
+  robust_residual_threshold_m: 0.003   # drop-and-refit: rejects a genuinely-deviated
+                                        # element's plane from the rigid-transform solve
+                                        # (a real deviation looks like a large offset
+                                        # residual, not registration noise) — see planes.py
+
+icp:
+  # A single fixed threshold left a several-mm residual bias (FR-2.13 explicitly
+  # calls for a "configurable max-distance schedule" — see icp.py). Each stage
+  # chains from the previous stage's result. The final stage (10mm) is deliberately
+  # tighter than this project's 14mm nominal-deviation magnitude (configs/grid.yaml's
+  # nominal_deviations) so a genuinely-deviated element's cloud points fall outside
+  # the final correspondence radius instead of biasing the whole-cloud rigid fit —
+  # the same reasoning as planes.py's robust_residual_threshold_m.
+  max_correspondence_distance_schedule_m: [0.15, 0.05, 0.02, 0.01]
+  max_iteration: 50
+  relative_fitness: 1.0e-6
+  relative_rmse: 1.0e-6
+  min_fitness: 0.10           # below this -> ICPDivergenceError
