@@ -1,0 +1,9 @@
+numpy
+scipy
+trimesh
+rtree
+open3d
+matplotlib
+pandas
+pyyaml
+pytest

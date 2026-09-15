@@ -1,0 +1,2 @@
+# Default seed list — 10 seeds/cell (Phase 1 SRS §5.4 / decision D5).
+seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

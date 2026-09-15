@@ -1,0 +1,76 @@
+# S1 "well-conditioned" scene — a room with walls at distinct orientations, a
+# slab, and 4 columns. Rich, unambiguous planar structure (favourable to
+# plane-based registration). See specs/plan/phase-1-synthetic-data.md §3.
+#
+# Room footprint 6.0m (x) x 5.0m (y), height 3.0m (z). All normals point
+# inward (into the room), matching an indoor as-built scan viewpoint.
+scene_id: S1
+description: well-conditioned room (4 walls + slab + 4 columns)
+elements:
+  - id: 1
+    cls: wall
+    center: [3.0, 0.0, 1.5]
+    normal: [0.0, 1.0, 0.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 6.0
+    height: 3.0
+  - id: 2
+    cls: wall
+    center: [3.0, 5.0, 1.5]
+    normal: [0.0, -1.0, 0.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 6.0
+    height: 3.0
+  - id: 3
+    cls: wall
+    center: [0.0, 2.5, 1.5]
+    normal: [1.0, 0.0, 0.0]
+    u_axis: [0.0, 1.0, 0.0]
+    width: 5.0
+    height: 3.0
+  - id: 4
+    cls: wall
+    center: [6.0, 2.5, 1.5]
+    normal: [-1.0, 0.0, 0.0]
+    u_axis: [0.0, 1.0, 0.0]
+    width: 5.0
+    height: 3.0
+  - id: 5
+    cls: slab
+    center: [3.0, 2.5, 0.0]
+    normal: [0.0, 0.0, 1.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 6.0
+    height: 5.0
+  - id: 6
+    cls: column
+    center: [0.5, 0.5, 1.5]
+    normal: [0.70710678, 0.70710678, 0.0]
+    u_axis: [-0.70710678, 0.70710678, 0.0]
+    width: 0.4
+    height: 3.0
+  - id: 7
+    cls: column
+    center: [5.5, 0.5, 1.5]
+    normal: [-0.70710678, 0.70710678, 0.0]
+    u_axis: [-0.70710678, -0.70710678, 0.0]
+    width: 0.4
+    height: 3.0
+  - id: 8
+    cls: column
+    center: [5.5, 4.5, 1.5]
+    normal: [-0.70710678, -0.70710678, 0.0]
+    u_axis: [0.70710678, -0.70710678, 0.0]
+    width: 0.4
+    height: 3.0
+  - id: 9
+    cls: column
+    center: [0.5, 4.5, 1.5]
+    normal: [0.70710678, -0.70710678, 0.0]
+    u_axis: [0.70710678, 0.70710678, 0.0]
+    width: 0.4
+    height: 3.0
+scanner_origins_m:
+  - [3.0, 2.5, 1.5]
+  - [1.0, 1.0, 1.6]
+  - [5.0, 4.0, 1.6]

@@ -1,0 +1,29 @@
+[project]
+name = "bim-pointcloud-deviation"
+version = "0.1.0"
+description = "Registration-error-aware deviation detection between as-built point clouds and as-designed BIM models"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy",
+  "scipy",
+  "trimesh",
+  "rtree",
+  "open3d",
+  "matplotlib",
+  "pandas",
+  "pyyaml",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

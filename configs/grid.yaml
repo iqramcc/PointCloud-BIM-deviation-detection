@@ -1,0 +1,30 @@
+# Frozen experiment grid — decision D5 (specs/decision-log.md), Phase 1 SRS §5.4.
+# Registration-error axis kept dense (primary variable); noise/occlusion coarse.
+scenes: [S1, S2]
+# Benchmarked (not the 2500/m^2 figure used only as a schema example in the SRS):
+# 2500/m^2 -> ~5.5h / 47GB for the full grid, violating NFR-1.2 (<=15 min) and the
+# laptop-disk assumption (A5). 100/m^2 -> ~13 min / ~2.1GB for the full grid. Density
+# can be raised again per-experiment later; this is a config value, not frozen like D1-D5.
+point_density_per_m2: 100
+tolerance_mm: 10.0  # decision D4
+
+rot_deg: [0.0, 0.5, 1.0, 2.0, 4.0]
+trans_mm: [0, 10, 25, 50, 100]
+noise_sigma_mm: [1, 3, 5]
+occlusion: [none, moderate, heavy]
+
+# Reduced grid fallback (risk R2 / roadmap §3.2) — not used unless the full
+# grid overruns the weekly compute budget:
+fallback:
+  noise_sigma_mm: [1, 5]
+  occlusion: [none, heavy]
+
+# Nominal deviations injected per scene, independent of the grid point above.
+# Element ids reference configs/scenes/<scene>.yaml. One element per scene is
+# pushed out of tolerance (tolerance_mm above); the rest stay within it, so
+# every sample has a known positive and known negatives for detection scoring.
+nominal_deviations:
+  S1:
+    3: {type: normal_offset, value_mm: 14.0}
+  S2:
+    2: {type: normal_offset, value_mm: 14.0}

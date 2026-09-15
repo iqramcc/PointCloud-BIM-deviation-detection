@@ -23,7 +23,8 @@ budget"), not a new registration algorithm.
 
 ## Status
 
-**Planning phase.** No pipeline code yet. The full spec suite is in [`specs/`](specs/):
+**Phase 1 (synthetic data) implemented and gate-tested.** Phase 0 (spec suite) is approved;
+decisions D1–D5 are resolved. The full spec suite is in [`specs/`](specs/):
 
 | Document | Purpose |
 |---|---|
@@ -31,26 +32,39 @@ budget"), not a new registration algorithm.
 | [`specs/literature-review.md`](specs/literature-review.md) | Prior work, the gap, design insights |
 | [`specs/roadmap.md`](specs/roadmap.md) | Workflow, 7-week schedule, risks, assessment package |
 | [`specs/srs/`](specs/srs/) | One Software Requirements Specification per phase (0–5) |
-| [`specs/decision-log.md`](specs/decision-log.md) | Open decisions D1–D5 + change record |
+| [`specs/plan/`](specs/plan/) | Per-phase technical design (added at phase start) |
+| [`specs/tasks/`](specs/tasks/) | Per-phase task checklist (added at phase start) |
+| [`specs/decision-log.md`](specs/decision-log.md) | Resolved decisions D1–D5 + change record |
 
 Start with [`specs/README.md`](specs/README.md).
 
-## Planned stack
+## Stack
 
-Python ≥ 3.11 · Open3D · NumPy · SciPy · trimesh · Matplotlib · pandas · PyYAML.
+Python ≥ 3.11 (venv uses 3.12 — `open3d` has no 3.13 wheel yet) · Open3D · NumPy · SciPy ·
+trimesh · rtree · Matplotlib · pandas · PyYAML.
 
-## Planned layout
+## Layout
 
 ```
-specs/        # governance + phase specs (this phase)
-src/          # datagen | registration | deviation | experiment  (Phases 1–4)
-configs/      # scenes, experiment grid, frozen parameters, seeds
+specs/        # governance + phase specs, plans, task lists
+src/datagen/  # Phase 1: synthetic as-built cloud / as-designed BIM generator (done)
+configs/      # scenes (S1, S2), experiment grid, seeds
+scripts/      # one-off figure/report generation scripts
 data/         # generated datasets (git-ignored) + manifests
 results/      # metrics, figures (git-ignored except final)
-reports/      # assessment package, final report, presentation
+reports/      # assessment package, final report, demonstrable-artifact figures
 tests/
 ```
 
 ## Reproduction
 
-_To be added in Phase 5 — a single command regenerating every figure from configs + seeds._
+```
+python -m venv .venv && .venv/Scripts/activate   # (or source .venv/bin/activate on Linux/Mac)
+pip install -r requirements.txt
+pytest                                            # Phase 1 self-validation (Art. II)
+python -m datagen.build_dataset --config configs/grid.yaml --out data/   # ~13 min, ~2GB
+python scripts/render_phase1_figure.py            # Phase 1 demonstrable artifact
+```
+
+A single command regenerating every *figure* end-to-end (all phases) will be added in
+Phase 5.

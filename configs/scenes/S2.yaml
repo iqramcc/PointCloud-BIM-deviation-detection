@@ -1,0 +1,63 @@
+# S2 "ambiguous" scene — a repetitive corridor bay: few distinct normal
+# directions (only +-y wall normals, +z slab, and identical +y column
+# faces), so translational sliding along the corridor axis (x) is weakly
+# constrained. Stresses both registration baselines differently than S1.
+# See specs/plan/phase-1-synthetic-data.md §3.
+#
+# Corridor 12.0m (x) x 2.5m (y), height 3.0m (z).
+scene_id: S2
+description: ambiguous corridor (2 walls + slab + 4 repeated columns)
+elements:
+  - id: 1
+    cls: wall
+    center: [6.0, 0.0, 1.5]
+    normal: [0.0, 1.0, 0.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 12.0
+    height: 3.0
+  - id: 2
+    cls: wall
+    center: [6.0, 2.5, 1.5]
+    normal: [0.0, -1.0, 0.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 12.0
+    height: 3.0
+  - id: 3
+    cls: slab
+    center: [6.0, 1.25, 0.0]
+    normal: [0.0, 0.0, 1.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 12.0
+    height: 2.5
+  - id: 4
+    cls: column
+    center: [1.5, 0.3, 1.5]
+    normal: [0.0, 1.0, 0.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 0.4
+    height: 3.0
+  - id: 5
+    cls: column
+    center: [4.5, 0.3, 1.5]
+    normal: [0.0, 1.0, 0.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 0.4
+    height: 3.0
+  - id: 6
+    cls: column
+    center: [7.5, 0.3, 1.5]
+    normal: [0.0, 1.0, 0.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 0.4
+    height: 3.0
+  - id: 7
+    cls: column
+    center: [10.5, 0.3, 1.5]
+    normal: [0.0, 1.0, 0.0]
+    u_axis: [1.0, 0.0, 0.0]
+    width: 0.4
+    height: 3.0
+scanner_origins_m:
+  - [1.5, 1.25, 1.6]
+  - [6.0, 1.25, 1.6]
+  - [10.5, 1.25, 1.6]
